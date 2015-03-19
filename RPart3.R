@@ -22,12 +22,13 @@ print(model)
 ##### as a function of the choice of the meta-parameters you estimate important.####
 
 precision = c()
-for ( C in 3:5) {
-  for( G in 1:3){
-  model <- svm(Class ~ .,DigitsTrain ,cost = C, gamma = G)#0.0004
+G = c( 0.001 , 0.0001 , 0.00001)
+for ( C in 3) {
+  for( i in 1:length(G)){
+  model <- svm(Class ~ .,DigitsTrain ,cost = C, gamma = G[i])#0.0004
   pre.test <- predict(model, DigitsValid)
   
-  precision[(C-1)*3+G] = accuracy(table(pred = pre.test , true = t(DigitsValid[1])))
+  precision[(C-3)*3+i] = accuracy(table(pred = pre.test , true = t(DigitsValid[1])))
   }
 }
 
@@ -35,6 +36,10 @@ plot(precision)
 # 3)
 ##### Report learning curves by measuring classification performance
 ##### with an increasing number of training examples. #####
+
+for(i in 1:10){
+  
+}
 
 # 4)
 ##### Choose the training examples uniformly at random
