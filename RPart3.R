@@ -134,7 +134,7 @@ df
 ##### Turn in one or several plot(s) to sustain your claims. #####
 
 
-### Esti- mate a SVM on the whole training set according to the best choices of meta-parameters 
+### Estimate a SVM on the whole training set according to the best choices of meta-parameters 
 ### (as determined previously on the validation set) and report performances on the whole test set.
 
 x <- subset(DigitsTrain, select = -Class)
@@ -149,3 +149,27 @@ print(model)
 ### Choose a significantly different meta-parameters setting (based on the validation
 ### results computed in question 4), report the corresponding number of support vectors,
 ### training and test set classification results.
+
+x <- subset(DigitsTrain, select = -Class)
+y <- subset(DigitsTrain, select = Class)
+
+
+model <- svm(Class ~ .,x,y ,cost = 7, gamma = 0.000479616306954437)
+model <- svm(Class ~ .,DigitsTrain ,cost = 7, gamma = 0.000479616306954437)
+pre.test <- predict(model, DigitsValid)
+
+newsample <- DigitsValid
+
+## last sous question 5.2
+
+model <- svm(Class ~ .,DigitsTrain ,cost = 7, gamma = 0.000479616306954437)
+pre.test <- predict(model, DigitsTrain)
+accuracy(table(pred = pre.test , true = t(DigitsTrain[1])))
+
+pre.test <- predict(model, DigitsValid)
+accuracy(table(pred = pre.test , true = t(DigitsValid[1])))
+
+pre.test <- predict(model, DigitsTest)
+accuracy(table(pred = pre.test , true = t(DigitsTest[1])))
+
+## résultat sur 
