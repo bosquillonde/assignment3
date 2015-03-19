@@ -66,14 +66,6 @@ samplingTest <- function() {
 df = samplingTest()
 df
 
-data <- data.frame(percent = df[1:10,1], 
-                   percent = df[11:20,1],
-                   percent = df[21:30,1],
-                   percent = df[31:40,1],
-                   percent = df[41:50,1],
-                   percent = df[51:60,1]
-)
-boxplot(data)
 
 vector <- c(2, 5, 10, 20, 50, 99)/100
 acc = c()
