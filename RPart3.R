@@ -16,12 +16,22 @@ pre.test <- predict(model, DigitsValid)
 table(pred = pre.test , true = t(DigitsValid[1]))
 print(model)
 
+
 # 2)
 ##### Analyze the classification performance on the DIGITS validation set
 ##### as a function of the choice of the meta-parameters you estimate important.####
 
+precision = c()
+for ( C in 3:5) {
+  for( G in 1:3){
+  model <- svm(Class ~ .,DigitsTrain ,cost = C, gamma = G)#0.0004
+  pre.test <- predict(model, DigitsValid)
+  
+  precision[(C-1)*3+G] = accuracy(table(pred = pre.test , true = t(DigitsValid[1])))
+  }
+}
 
-
+plot(precision)
 # 3)
 ##### Report learning curves by measuring classification performance
 ##### with an increasing number of training examples. #####
