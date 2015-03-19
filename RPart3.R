@@ -79,7 +79,7 @@ for ( i in 1:length(vector)) {
     trainingvector <- randomvector[1:len]
     mysample <- DigitsTrain[trainingvector,]
     
-    model <- svm(Class ~ .,DigitsTrain ,cost = 4, gamma = 0.0004)#0.0004###TODO
+    model <- svm(Class ~ .,DigitsTrain ,cost = 7, gamma = 0.000479616306954437)#0.0004###TODO
     pre.test <- predict(model, DigitsTest)
     acc[i] = acc[i] + accuracy(table(pred = pre.test , true = t(DigitsTest[1])))/num
     accuracy(table(pred = pre.test , true = t(DigitsTest[1])))
@@ -97,9 +97,26 @@ df
 
 # 5) en gros c'est la question 2...
 ##### Are the default meta-parameter definitions of the svm method appropriate for your ex- periments
-##### on the DIGITS dataset? Use the validation set to select the best choices of meta-parameters. #####
+##### on the DIGITS dataset? Use the validation set to select the best choices of meta-parameters. #####TODOTODOTODOTODO
 
 # 6)
 ##### Can you conclude that the results obtained on the validation set,
 ##### after selecting the optimal meta-parameters, predict accurately test set classification results?
 ##### Turn in one or several plot(s) to sustain your claims. #####
+
+
+### Esti- mate a SVM on the whole training set according to the best choices of meta-parameters 
+### (as determined previously on the validation set) and report performances on the whole test set.
+
+x <- subset(DigitsTrain, select = -Class)
+y <- subset(DigitsTrain, select = Class)
+
+model <- svm(Class ~ .,DigitsTrain ,cost = 7, gamma = 0.000479616306954437)
+pre.test <- predict(model, DigitsValid)
+
+table(pred = pre.test , true = t(DigitsValid[1]))
+print(model)
+
+### Choose a significantly different meta-parameters setting (based on the validation
+### results computed in question 4), report the corresponding number of support vectors,
+### training and test set classification results.
