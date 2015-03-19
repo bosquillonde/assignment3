@@ -37,14 +37,47 @@ plot(precision)
 ##### Report learning curves by measuring classification performance
 ##### with an increasing number of training examples. #####
 
-for(i in 1:10){
-  
+samplingTest <- function() {
+
+  vector <- c(2, 5, 10, 20, 50, 99)/100
+  acc = c()
+  num = 10
+  df <- data.frame()
+  for ( i in 1:length(vector)) {
+    for ( j in 1:num) {
+      dim <- dim(DigitsTrain)
+      randomvector <- sample(dim[1])
+      len = (dim[1]*vector[i])
+      trainingvector <- randomvector[1:len]
+      mysample <- DigitsTrain[trainingvector,]
+      
+      model <- svm(Class ~ .,DigitsTrain ,cost = 4, gamma = 0.0004)#0.0004###TODO
+      pre.test <- predict(model, DigitsTest)
+      acc[i] = acc[i] + accuracy(table(pred = pre.test , true = t(DigitsTest[1])))/num
+            
+      df[(i-1)*num+j,1] = accuracy(table(pred = pre.test , true = t(DigitsTest[1])))
+    }
+  }
+  plot(vector, acc, xlab="size", ylab="accuracy", type="l", col="blue")
+  #lines(vector, size, xlab="size", ylab="number of nodes", type="l", col="blue")
+  df
 }
+
+df = samplingTest()
+df
+
+data <- data.frame(percent = df[1:10,4], 
+                   percent = df[11:20,4],
+                   percent = df[21:30,4],
+                   percent = df[31:40,4],
+                   percent = df[41:50,4],
+                   percent = df[51:60,4]
+)
 
 # 4)
 ##### Choose the training examples uniformly at random
 ##### from the global training set and report median performances 
-##### (boxplots may be useful to illustrate the variability across different selec- tions of training examples).
+##### (boxplots may be useful to illustrate the variability across different selections of training examples).
 
 # 5) en gros c'est la question 2...
 ##### Are the default meta-parameter definitions of the svm method appropriate for your ex- periments
