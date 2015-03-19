@@ -58,6 +58,9 @@ bestsParam <- which(results[1]== max(results[1]),arr.ind = TRUE)
 best <- results[bestsParam[1],]
 print(paste("Accuracy = ", best[1], "| cost = ", best[2], " | gamma = ", best[3]))
 
+scatterplot3d( results[[3]],results[[2]],results[[1]], pch=3, highlight.3d=TRUE,
+               type="h", main="Best parameters choice", xlab = "Gamma", ylab="Cost", zlab="Accuracy")
+
 precision
 plot(precision)
 
@@ -73,6 +76,7 @@ samplingTest <- function() {
   num = 10
   df <- data.frame()
   for ( i in 1:length(vector)) {
+    res <- 0
     for ( j in 1:num) {
       dim <- dim(DigitsTrain)
       randomvector <- sample(dim[1])
@@ -82,11 +86,15 @@ samplingTest <- function() {
       
       model <- svm(Class ~ .,mysample ,cost = 4, gamma = 0.0004)#0.0004###TODO
       pre.test <- predict(model, DigitsTest)
-      acc[i] = acc[i] + accuracy(table(pred = pre.test , true = t(DigitsTest[1])))/num
-            
+      ress <- ress + accuracy(table(pred = pre.test , true = t(DigitsTest[1])))/num
+      
       df[(i-1)*num+j,1] = accuracy(table(pred = pre.test , true = t(DigitsTest[1])))
+      print(i)
     }
+    acc <- c(acc, res)
   }
+  print(acc)
+  print(vector)
   plot(vector, acc, xlab="size", ylab="accuracy", type="l", col="blue")
   #lines(vector, size, xlab="size", ylab="number of nodes", type="l", col="blue")
   df
