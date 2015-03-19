@@ -4,6 +4,11 @@ accuracy <- function(table) {
   (table[1,1]+table[2,2])/(table[1,1]+table[2,2]+table[1,2]+table[2,1])
 }
 
+accuracy2 <- function(tab, initial){
+  acc <- 100-(sum(tab)-sum(diag(tab)))/dim(initial)[1]*100
+  acc
+}
+
 # 1)
 ##### Estimate a Support Vector Machine on the DIGITS training set to predict the class label.
 ##### Use in particular a classifier learned with svm from the e1071 package.  #####
@@ -21,18 +26,42 @@ print(model)
 ##### Analyze the classification performance on the DIGITS validation set
 ##### as a function of the choice of the meta-parameters you estimate important.####
 
-precision = c()
-G = c( 0.001 , 0.0001 , 0.00001)
-for ( C in 3) {
-  for( i in 1:length(G)){
-  model <- svm(Class ~ .,DigitsTrain ,cost = C, gamma = G[i])#0.0004
-  pre.test <- predict(model, DigitsValid)
-  
-  precision[(C-3)*3+i] = accuracy(table(pred = pre.test , true = t(DigitsValid[1])))
-  }
+accuracy <- function(table) {
+  (table[1,1]+table[2,2])/(table[1,1]+table[2,2]+table[1,2]+table[2,1])
 }
 
+
+G = seq(0.2, 2, by = 0.2)
+C = seq(1, 7, by = 1)
+
+parameters <- function() {
+  df <- data.frame()
+  for ( i in C) {
+    for( j in 1:length(G)){
+      model <- svm(Class ~ .,DigitsTrain ,cost = C[i], gamma = G[j]/dim(DigitsTrain)[2])#0.0004
+      pre.test <- predict(model, DigitsValid)
+      tab <- table(pre.test , DigitsValid$Class)
+      acc <- accuracy(tab)
+      df[(i-1)*length(G)+j, 1] <- acc
+      df[(i-1)*length(G)+j, 2] <- C[i]
+      df[(i-1)*length(G)+j, 3] <- G[j]/dim(DigitsTrain)[2]
+      df[(i-1)*length(G)+j, 4] <- G[j]
+      
+      #print(paste("Accuracy = ", acc, "| cost = ", i, " | gamma = ", G[j]/dim(DigitsTrain)[2]))
+    }
+  }
+  df
+}
+
+results <- parameters()
+bestsParam <- which(results[1]== max(results[1]),arr.ind = TRUE)
+best <- results[bestsParam[1],]
+print(paste("Accuracy = ", best[1], "| cost = ", best[2], " | gamma = ", best[3]))
+
+precision
 plot(precision)
+
+
 # 3)
 ##### Report learning curves by measuring classification performance
 ##### with an increasing number of training examples. #####
